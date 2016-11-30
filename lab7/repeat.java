@@ -32,7 +32,7 @@ public class repeat {
     public static class ReducerClass extends Reducer<Text, Text, Text, Text>{
         public void reduce(Text key, Iterable<Text> value, Context context){
             try {
-                context.write(value, new Text(""));
+                context.write(key, new Text(""));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
