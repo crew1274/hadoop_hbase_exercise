@@ -11,5 +11,12 @@ run:
 	hadoop jar repeat.jar repeat /data2 /output2
 	hdfs dfs -cat /output2/part-r-00000
 
+clean:
+	rm repeat.jar
+
+
+delete:
+	hdfs dfs -rm -r /output2
+
 # vim:ft=make
 #
