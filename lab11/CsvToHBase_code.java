@@ -26,6 +26,9 @@ public class CsvToHBase {
         HTable table = new HTable(cfg, tableName);
         Put p = new Put(Bytes.toBytes(rowId));
         //code here
+        p.add(Bytes.toBytes("cf1"), Bytes.toBytes("School"), Bytes.toBytes(data[0]));
+        p.add(Bytes.toBytes("cf1"), Bytes.toBytes("Dept"), Bytes.toBytes(data[1]));
+        p.add(Bytes.toBytes("cf2"), Bytes.toBytes("Id"), Bytes.toBytes(data[2]));
         System.out.println("put '"+ rowId +"', cf1:School, '" + data[0] +"'");
         System.out.println("put '"+ rowId +"', cf1:Dept, '" + data[1] +"'");
         System.out.println("put '"+ rowId +"', cf2:Id, '" + data[2] +"'");
@@ -35,6 +38,10 @@ public class CsvToHBase {
     public static void createHBaseTable(String tableName) throws IOException{
         HTableDescriptor htd = new HTableDescriptor(tableName);
         //code here
+        HColumnDescriptor col1 = new HColumnDescriptor("cf1");
+        htd.addFamily(col1);
+        HColumnDescriptor col2 = new HColumnDescriptor("cf2");
+        htd.addFamily(col2);
         HBaseConfiguration config = new HBaseConfiguration();
         HBaseAdmin admin = new HBaseAdmin(config);
         if (admin.tableExists(tableName)){
@@ -50,6 +57,16 @@ public class CsvToHBase {
         String tableName = "csvtohbase";
         createHBaseTable(tableName);
         //code here
+        try (BufferedReader br = new BufferedReader(new FileReader(args[0]))) {
+            String line;
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String rs[] = line.toString().trim().split(",");
+                putIntoHBase(tableName, "row" + i, rs);
+                i++;
+            }
+            
+        }
     }
 }
 
